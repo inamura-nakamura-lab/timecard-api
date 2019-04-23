@@ -14,6 +14,8 @@ type IUserController interface {
 	AddUser(ctx *gin.Context)
 	GetUser(ctx *gin.Context)
 	DeleteUser(ctx *gin.Context)
+	PostAttendance(ctx *gin.Context)
+	GetAttendance(ctx *gin.Context)
 }
 
 func NewUserController(srv service.IUserService) IUserController {
@@ -44,4 +46,20 @@ func (ctrl *userController) DeleteUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
 	}
 	ctx.JSON(http.StatusNoContent, gin.H{})
+}
+
+func (ctrl *userController) PostAttendance(ctx *gin.Context) {
+	err := ctrl.IUserService.AddAttendance(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
+	}
+	ctx.JSON(http.StatusCreated, gin.H{})
+}
+
+func (ctrl *userController) GetAttendance(ctx *gin.Context) {
+	result, err := ctrl.IUserService.GetAttendance(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
+	}
+	ctx.JSON(http.StatusOK, result)
 }

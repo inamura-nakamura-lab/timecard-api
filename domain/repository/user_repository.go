@@ -9,4 +9,6 @@ type IUserRepository interface {
 	InsertUser(ctx *gin.Context, user *model.User) error
 	SelectUser(ctx *gin.Context, userID uint) (*model.User, error)
 	DeleteUser(ctx *gin.Context, userID uint) error
+	InsertAttendance(ctx *gin.Context, userID uint, dataFrom, dataTo string) error
+	SelectAttendance(ctx *gin.Context, userID uint) (*model.TimeCard, error)
 }

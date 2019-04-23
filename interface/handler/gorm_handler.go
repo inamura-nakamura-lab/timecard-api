@@ -30,6 +30,8 @@ func (orm *gormHandler) CreateConnection() (*gorm.DB, error) {
 		return nil, err
 	}
 	fmt.Println("Create User Table")
+	DB.AutoMigrate(&db.Attendance{})
+	DB.AutoMigrate(&db.TimeCard{})
 	DB.AutoMigrate(&db.User{})
 	return DB, nil
 }

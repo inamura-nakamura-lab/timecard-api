@@ -17,6 +17,8 @@ type IUserService interface {
 	AddUser(ctx *gin.Context) error
 	GetUser(ctx *gin.Context) (*model.User, error)
 	DeleteUser(ctx *gin.Context) error
+	AddAttendance(ctx *gin.Context) error
+	GetAttendance(ctx *gin.Context) (*model.TimeCard, error)
 }
 
 func NewUserService(repo repository.IUserRepository) IUserService {
@@ -74,4 +76,52 @@ func (srv *userService) DeleteUser(ctx *gin.Context) error {
 		return err
 	}
 	return nil
+}
+
+func (srv *userService) AddAttendance(ctx *gin.Context) error {
+	paramID := ctx.Param("id")
+	if paramID == "" {
+		return fmt.Errorf("Parameter Cannot Find")
+	}
+	userID, err := strconv.ParseUint(paramID, 10, 32)
+	if err != nil {
+		return err
+	}
+	paramDataFrom := ctx.Param("date_from")
+	if paramDataFrom == "" {
+		return fmt.Errorf("Parameter Cannot Find")
+	}
+	paramDataTo := ctx.Param("date_to")
+	if paramDataTo == "" {
+		return fmt.Errorf("Parameter Cannot Find")
+	}
+	err = srv.IUserRepository.InsertAttendance(ctx, uint(userID), paramDataFrom, paramDataTo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (srv *userService) GetAttendance(ctx *gin.Context) (*model.TimeCard, error) {
+	paramID := ctx.Param("id")
+	if paramID == "" {
+		return nil, fmt.Errorf("Parameter Cannot Find")
+	}
+	userID, err := strconv.ParseUint(paramID, 10, 32)
+	if err != nil {
+		return nil, err
+	}
+	timeCard, err := srv.IUserRepository.SelectAttendance(ctx, uint(userID))
+	if err != nil {
+		return nil, err
+	}
+	var result model.TimeCard
+	for _, value := range timeCard.Attendances {
+		attendance := model.Attendance{
+			DateFrom: value.DateFrom,
+			DateTo: value.DateTo,
+		}
+		result.Attendances = append(result.Attendances, attendance)
+	}
+	return &result, nil
 }
