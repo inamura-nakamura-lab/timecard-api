@@ -1,13 +1,12 @@
 package main
 
 import (
-	"github.com/inamura-nakamura-lab/timecard-api/interface/handler"
+	"github.com/inamura-nakamura-lab/timecard-api/utils/handler"
+	"os"
 )
 
 func main() {
-	routerHandler := handler.NewRouterHandler()
-	r := routerHandler.SetUpRouter()
-	err := r.Run(":8888")
+	err := handler.Router.Run(":" + os.Getenv("PORT"))
 	if err != nil {
 		panic(err)
 	}

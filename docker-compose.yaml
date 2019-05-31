@@ -10,17 +10,24 @@ services:
     ports:
       - "3306:3306"
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
-  # api:
-  #   build: .
-  #   ports:
-  #     - 3001:3001
+#  api:
+#     build: .
+#     ports:
+#       - 3001:3001
   dev-app:
       build:
         context: .
         dockerfile: dev.Dockerfile
+      depends_on:
+        - db
       volumes:
         - .:/app
       ports: 
         - "3000:3000"
       environment: 
         - "PORT=3000"
+        - "DB_VENDOR=mysql"
+        - "USER=timecard"
+        - "PASS=timecard"
+        - "PROTOCOL=tcp(db)"
+        - "DBNAME=timecard"

@@ -2,12 +2,13 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/inamura-nakamura-lab/timecard-api/domain/service"
+	"github.com/inamura-nakamura-lab/timecard-api/domain/service/interfaces"
+	"log"
 	"net/http"
 )
 
 type userController struct {
-	service.IUserService
+	interfaces.IUserService
 }
 
 type IUserController interface {
@@ -16,7 +17,7 @@ type IUserController interface {
 	DeleteUser(ctx *gin.Context)
 }
 
-func NewUserController(srv service.IUserService) IUserController {
+func NewUserController(srv interfaces.IUserService) IUserController {
 	return &userController{
 		srv,
 	}
@@ -25,6 +26,7 @@ func NewUserController(srv service.IUserService) IUserController {
 func (ctrl *userController) AddUser(ctx *gin.Context) {
 	err := ctrl.IUserService.AddUser(ctx)
 	if err != nil {
+		log.Println(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": err})
 	}
 	ctx.JSON(http.StatusCreated, gin.H{})

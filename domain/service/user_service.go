@@ -5,7 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/inamura-nakamura-lab/timecard-api/domain/model"
 	"github.com/inamura-nakamura-lab/timecard-api/domain/repository"
+	"github.com/inamura-nakamura-lab/timecard-api/domain/service/interfaces"
 	db "github.com/inamura-nakamura-lab/timecard-api/infrastructure/persistence/model"
+	"log"
 	"strconv"
 )
 
@@ -13,13 +15,7 @@ type userService struct {
 	repository.IUserRepository
 }
 
-type IUserService interface {
-	AddUser(ctx *gin.Context) error
-	GetUser(ctx *gin.Context) (*model.User, error)
-	DeleteUser(ctx *gin.Context) error
-}
-
-func NewUserService(repo repository.IUserRepository) IUserService {
+func NewUserService(repo repository.IUserRepository) interfaces.IUserService {
 	return &userService{
 		repo,
 	}
@@ -28,13 +24,15 @@ func NewUserService(repo repository.IUserRepository) IUserService {
 func (srv *userService) AddUser(ctx *gin.Context) error {
 	bindUser := new(model.BindUser)
 	err := ctx.Bind(&bindUser)
+	log.Printf("[BindUser] %v", bindUser)
 	if err != nil {
 		return err
 	}
 	dbUser := &db.User{
 		Name: bindUser.Name,
-		StudentNum: bindUser.Name,
+		StudentNum: bindUser.StudentNum,
 	}
+	log.Printf("[DBUser] %v", dbUser)
 	return srv.IUserRepository.InsertUser(ctx, dbUser)
 }
 

@@ -10,3 +10,7 @@ type IUserRepository interface {
 	SelectUser(ctx *gin.Context, userID uint) (*model.User, error)
 	DeleteUser(ctx *gin.Context, userID uint) error
 }
+
+var (
+	UserRepository IUserRepository
+)
