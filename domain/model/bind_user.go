@@ -1,6 +1,6 @@
 package model
 
 type BindUser struct {
-	Name       string `json:"name"`
-	StudentNum string `json:"student_number"`
+	Name          string `json:"name"`
+	StudentNumber string `json:"student_number"`
 }

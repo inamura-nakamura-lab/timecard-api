@@ -7,6 +7,7 @@ require (
 	github.com/denisenkom/go-mssqldb v0.0.0-20190515213511-eb9f6a1743f3 // indirect
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7
 	github.com/gin-gonic/gin v1.3.0
+	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/golang/mock v1.3.1 // indirect
 	github.com/golang/protobuf v1.3.1
@@ -18,6 +19,7 @@ require (
 	github.com/kr/pty v1.1.4 // indirect
 	github.com/lib/pq v1.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.0-20170307163044-57fdcb988a5c
+	github.com/satori/go.uuid v1.2.0
 	github.com/ugorji/go v0.0.0-20170215201144-c88ee250d022
 	go.opencensus.io v0.22.0 // indirect
 	golang.org/x/build v0.0.0-20190314133821-5284462c4bec // indirect

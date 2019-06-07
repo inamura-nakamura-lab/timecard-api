@@ -1,0 +1,2 @@
+go: finding github.com/inamura-nakamura-lab/timecard-api/mod latest
+build github.com/inamura-nakamura-lab/timecard-api: cannot load github.com/inamura-nakamura-lab/timecard-api/mod: cannot find module providing package github.com/inamura-nakamura-lab/timecard-api/mod
