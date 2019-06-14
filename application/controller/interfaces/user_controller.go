@@ -7,4 +7,6 @@ type IUserController interface {
 	GetUsers(ctx *gin.Context)
 	GetUser(ctx *gin.Context)
 	DeleteUser(ctx *gin.Context)
+	GetAttendance(ctx *gin.Context)
+	PostAttendance(ctx *gin.Context)
 }

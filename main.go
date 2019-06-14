@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/inamura-nakamura-lab/timecard-api/application/controller"
-	"github.com/inamura-nakamura-lab/timecard-api/mod"
 	"log"
 	"os"
 )
