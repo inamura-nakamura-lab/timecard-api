@@ -1,16 +1,52 @@
 version: "3"
 services:
-  db:
-    image: mysql:5.7.22
+#  db:
+#    image: mysql:5.7.22
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_USER: timecard
+#      MYSQL_PASSWORD: timecard
+#      MYSQL_DATABASE: timecard
+#    ports:
+#      - "3306:3306"
+#    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+#  api:
+#     build: .
+#     ports:
+#       - 3001:3001
+  dev-app:
+      build:
+        context: .
+        dockerfile: dev.Dockerfile
+      depends_on:
+        - mongo
+      volumes:
+        - .:/app
+      ports: 
+        - "3000:3000"
+      environment:
+        - "PORT=3000"
+        - "MONGO_HOST=mongo"
+        - "MONGO_USER=root"
+        - "MONGO_DATABASE=timecard"
+        - "MONGO_DATABASE_PASSWORD=example"
+        - "MONGO_URL=mongodb://root:example@mongo"
+  mongo:
+    image: mongo
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: timecard
-      MYSQL_PASSWORD: timecard
-      MYSQL_DATABASE: timecard
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - "3306:3306"
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
-  api:
-    build: .
+      - 27017:27017
+    volumes:
+      - ./db:/data/db
+      - ./configdb:/data/configdb
+  mongo-express:
+    image: mongo-express
+    restart: always
     ports:
-      - 3001:3001
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example

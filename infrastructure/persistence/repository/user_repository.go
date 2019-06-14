@@ -2,36 +2,50 @@ package repository
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"github.com/inamura-nakamura-lab/timecard-api/domain/repository"
-	"github.com/inamura-nakamura-lab/timecard-api/infrastructure/persistence/model"
-	"github.com/jinzhu/gorm"
+	"github.com/inamura-nakamura-lab/timecard-api/infrastructure/persistence/model/mongo"
 )
 
-type userRepository struct {
-	*gorm.DB
+type userRepository struct{
+	*mgo.Collection
 }
 
-func NewUserRepository(orm *gorm.DB) repository.IUserRepository {
-	return &userRepository{
-		orm,
+func NewUserRepository(mgoConn *mgo.Collection) repository.IUserRepository {
+	return &userRepository{mgoConn}
+}
+
+func (repo *userRepository) InsertUser(ctx *gin.Context, user *mongo.User) error {
+	err := repo.Collection.Insert(user)
+	if err != nil {
+		return err
 	}
+	return nil
 }
 
-func (repo *userRepository) InsertUser(ctx *gin.Context, user *model.User) error {
-	return repo.DB.Create(user).Error
-}
-
-func (repo *userRepository) SelectUser(ctx *gin.Context, userID uint) (*model.User, error) {
-	result := new(model.User)
-	err := repo.DB.Where("id = ?", userID).First(&result).Error
+func (repo *userRepository) SelectUsers(ctx *gin.Context) ([]*mongo.User, error) {
+	var result []*mongo.User
+	err := repo.Collection.Find(bson.M{}).All(&result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (repo *userRepository) DeleteUser(ctx *gin.Context, userID uint) error {
-	return repo.DB.Delete("id = ?", userID).Error
+func (repo *userRepository) SelectUser(ctx *gin.Context, userID string) (*mongo.User, error) {
+	var result *mongo.User
+	err := repo.Collection.Find(bson.M{"uuid": userID}).One(&result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
-
+func (repo *userRepository) DeleteUser(ctx *gin.Context, userID string) error {
+	err := repo.Collection.Remove(bson.M{"uuid": userID})
+	if err != nil {
+		return err
+	}
+	return nil
+}
